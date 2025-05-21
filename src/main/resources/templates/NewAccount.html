@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Create New User Account</title>
+  <link rel="stylesheet" href="startup.css">
+    <style>
+      form {
+          margin: auto;
+          vertical-align: middle;
+          padding: 20px;
+          border-radius: 15px;
+          width: 40%;
+          height: 80%;
+          background-size: 100% auto;
+          box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+          transition: 0.5s;
+          background-color: #ffffff;
+      }
+    </style>
+  <script>
+        window.onload = function() {
+            document.getElementById('newUserForm').reset();
+        };
+
+        function validateForm() {
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const role = document.getElementById('role').value;
+            const number = document.getElementById('number').value;
+            const password = document.getElementById('password').value;
+
+            const nameError = document.getElementById('nameError');
+            const passwordError = document.getElementById('passwordError');
+            const numberError = document.getElementById('numberError');
+
+            nameError.innerText = passwordError.innerText = numberError.innerText = '';
+
+            if (!fullName.trim()) {
+                nameError.innerText = 'Full name is required.';
+                return false;
+            }
+
+            if (!number.trim()) {
+                numberError.innerText = role === 'student' ? 'Student number is required.' : 'Staff number is required.';
+                return false;
+            }
+
+            const passwordRegex = /^[A-Za-z]{3}[A-Za-z0-9]{3,7}$/;
+            if (!passwordRegex.test(password)) {
+                passwordError.innerText = 'Password must be 6-10 characters long and start with 3 letters.';
+                return false;
+            }
+
+            alert('Form submitted successfully!');
+            return true;
+        }
+
+        function toggleNumberField() {
+            const role = document.getElementById('role').value;
+            const numberLabel = document.getElementById('numberLabel');
+            const numberInput = document.getElementById('number');
+
+            if (role === 'student') {
+                numberLabel.innerText = 'Matriculation Number';
+                numberInput.placeholder = 'Enter Student Number';
+            } else {
+                numberLabel.innerText = 'Staff Number';
+                numberInput.placeholder = 'Enter Staff Number';
+            }
+        }
+    </script>
+</head>
+
+<body>
+  <form id="newUserForm" autocomplete="off" onsubmit="return validateForm();">
+    <h2>Create New User Account</h2>
+
+    <label for="fullName">Full Name</label>
+    <input type="text" id="fullName" name="fullName" placeholder="Enter Full Name" required>
+    <p class="error" id="nameError"></p>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="Enter Email Address" required>
+
+    <label for="role">Role</label>
+    <select id="role" name="role" onchange="toggleNumberField();" required>
+      <option value="student">Student</option>
+      <option value="staff">Staff</option>
+    </select>
+
+    <label id="numberLabel" for="number">Matriculation Number</label>
+    <input type="text" id="number" name="number" placeholder="Enter Student Number" required>
+    <p class="error" id="numberError"></p>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" placeholder="Enter Password" required>
+    <p class="error" id="passwordError"></p>
+
+    <label for="confirm_password">Confirm Password</label>
+    <input type="password" placeholder="Confirm Password" id="confirm_password" required>
+
+    <button type="submit">Create Account</button>
+
+    <div class="navigation-buttons">
+      <button type="button" onclick="window.location.href='Login.html';">Back to Login</button>
+      <button type="button" onclick="window.location.href='ForgotPass.html';">Forgot Password</button>
+    </div>
+  </form>
+</body>
+</html>

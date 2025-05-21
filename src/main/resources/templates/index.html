@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title> Web Application </title>
+    <link rel="stylesheet" href="style.css">
+</head>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('http://localhost:8010/api/courses')
+                .then(response => response.json())
+                .then(data => {
+                    const courseList = document.getElementById('course-list');
+                    courseList.innerHTML = '';
+
+                    if (data.length === 0) {
+                        courseList.innerHTML = '<li>No courses available.</li>';
+                    } else {
+                        data.forEach(course => {
+                            const li = document.createElement('li');
+                            const link = document.createElement('a');
+                            link.href = '#';
+                            link.innerHTML = `<strong>(${course.id})</strong>&emsp;${course.name}`;
+                            link.classList.add('course-link');
+
+                            li.appendChild(link);
+
+                            li.addEventListener('click', function() {
+                                document.querySelectorAll('#course-list li a').forEach(item => item.classList.remove('active'));
+                                link.classList.add('active');
+                                showAssignments(course.id);
+                            });
+
+                            courseList.appendChild(li);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading courses:', error));
+        });
+
+        function showAssignments(courseId) {
+            console.log(`Fetching assignments for course ID: ${courseId}`);
+
+            fetch(`http://localhost:8010/api/assignments/course/${courseId}`)
+                .then(response => response.json())
+                .then(assignments => {
+                    console.log('API response:', assignments);
+
+                    const assignmentList = document.getElementById('assignment-list');
+                    assignmentList.innerHTML = '';
+
+                    const h2 = document.createElement('h2');
+                    h2.innerText = 'Assignment List';
+                    assignmentList.appendChild(h2);
+
+                    if (Array.isArray(assignments) && assignments.length > 0) {
+                        assignments.forEach(assignment => {
+                            const li = document.createElement('li');
+                            li.classList.add('assignment-item');
+
+                            const titleSpan = document.createElement('span');
+                            titleSpan.classList.add('assignment-title');
+                            titleSpan.textContent = assignment.title;
+
+                            const dateSpan = document.createElement('span');
+                            dateSpan.classList.add('assignment-due-date');
+                            dateSpan.textContent = `Due : ${assignment.dueDate}`;
+
+                            // Append the title and due date to the li element
+                            li.appendChild(titleSpan);
+                            li.appendChild(dateSpan);
+
+                            li.addEventListener('click', function () {
+                                document.querySelectorAll('#assignment-list li').forEach(item => item.classList.remove('active'));
+                                li.classList.add('active');
+                                showSubmissions(assignment.id);
+                            });
+
+                            assignmentList.appendChild(li);
+                        });
+                    } else {
+                        assignmentList.innerHTML = '<li>No assignments available for this course.</li>';
+                    }
+                })
+                .catch(error => console.error('Error loading assignments:', error));
+        }
+
+        function showSubmissions(assignmentId) {
+            console.log(`Fetching submissions for assignment ID: ${assignmentId}`);
+
+            fetch(`http://localhost:8010/api/submissions/assignment/${assignmentId}`)
+                .then(response => response.json())
+                .then(submissions => {
+                    console.log('API response:', submissions);
+
+                    const submissionList = document.getElementById('submission-list');
+                    submissionList.innerHTML = '';
+
+                    if (Array.isArray(submissions) && submissions.length > 0) {
+                        submissions.forEach(submission => {
+                            const li = document.createElement('li');
+
+                            const objectElement = document.createElement('object');
+                            objectElement.width = "300";
+                            objectElement.height = "200";
+                            objectElement.textContent = "Not supported";
+
+                            fetch(`http://localhost:8010/api/submissions/${submission.id}/file`)
+                                .then(response => response.json())
+                                .then(blobData => {
+                                    const byteArray = Uint8Array.from(blobData.file);
+                                    const blob = new Blob([byteArray], { type: submission.fileType });
+                                    const fileURL = URL.createObjectURL(blob);
+
+                                    objectElement.data = fileURL;
+                                })
+                                .catch(error => console.error('Error fetching file:', error));
+
+                            li.appendChild(objectElement);
+
+                            const fileName = document.createElement('p');
+                            fileName.innerText = submission.fileName || 'Unnamed File';
+                            li.appendChild(fileName);
+
+                            submissionList.appendChild(li);
+                        });
+                    } else {
+                        submissionList.innerHTML = '<li>No submissions available for this assignment.</li>';
+                    }
+                })
+                .catch(error => console.error('Error loading submissions:', error));
+        }
+    </script>
+
+<body>
+<header>
+    <h1>Assignment Submission System</h1>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="#" class="active">CRUD</a></li>
+            <li><a href="analytics.html">Analytics</a></li>
+            <li><a href="login.html">Log Out</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <aside class="sidebar">
+        <h2>Available Courses</h2>
+        <ul id="course-list">
+            <!--<li><a href="#">Course 1</a></li>
+            <li><a href="#">Course 2</a></li>
+            <li><a href="#">Course 3</a></li>
+            <li><a href="#">Course 4</a></li>-->
+        </ul>
+        <br>
+        <!--<div class="records-header">
+            <h2>Submissions</h2>
+            <input type="text" class="search-bar" placeholder="Search...">
+        </div>-->
+        <br>
+        <ul id="assignment-list">
+            <!--<li><a href="#">Assignment 1</a></li>-->
+        </ul>
+    </aside>
+    <section class="crud-form">
+        <h2>Submissions</h2>
+        <!--<object data="testText.txt" width="300" height="200">
+            Not supported
+        </object>-->
+            <ul id="submission-list">
+                <!--<li><a href="#">Submission 1</a></li>-->
+            </ul>
+    </section>
+</main>
+</body>
+</html>

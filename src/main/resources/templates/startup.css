@@ -1,0 +1,108 @@
+html {
+            background-size: 100% auto;
+        }
+
+        body {
+            text-align: center;
+            font-family: calibri;
+            display: flex;
+            background-image: linear-gradient(to right, #f77fff, #07db8d);
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow-y: hidden;
+            touch-action: none;
+        }
+
+        form:hover {
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px,
+            rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        }
+
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+        }
+
+        button {
+            background-color: #04AA6D;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 95%;
+            border-radius: 5px;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.8;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            transform: scale(1.05);
+        }
+
+        .imgcontainer {
+            text-align: center;
+            margin: 75px 0 12px 0;
+        }
+
+        img.avatar {
+            width: 40%;
+            border-radius: 50%;
+        }
+
+        .container {
+            padding: 16px;
+        }
+
+        label, h2 {
+            font-size: 25px;
+            color: #97803d;
+        }
+
+        .added-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .added-buttons button {
+            width: 48%;
+            background-color: #0073e6;
+        }
+
+        input[type=text], input[type=email], input[type=password], select {
+            width: 95%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .navigation-buttons button {
+            width: 48%;
+            background-color: #0073e6;
+        }

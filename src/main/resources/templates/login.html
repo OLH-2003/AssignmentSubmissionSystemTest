@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login to Web Application</title>
+    <link rel="stylesheet" href="startup.css">
+    <style>
+        form {
+            margin: auto;
+            vertical-align: middle;
+            padding: 20px;
+            border-radius: 15px;
+            width: 30%;
+            height: 60%;
+            background-size: 100% auto;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+            transition: 0.5s;
+            background-color: #ffffff;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            document.getElementById('form_login').reset();
+        };
+
+        function Login(form) {
+            const email = form.email.value;
+            const password = form.passwordHash.value;
+
+            const data = {
+                email: email,
+                passwordHash: password,
+            };
+
+            console.log("Attempting login with:", data);
+
+            fetch('http://localhost:8010/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                console.log("Server responded with status:", response.status);
+                if (response.ok) {
+                    window.location.href = 'index.html';
+                } else {
+                    response.text().then(errorMessage => {
+                        alert("Login failed: " + errorMessage);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error occurred:', error);
+                alert('An error occurred while logging in');
+            });
+
+            return false;
+        }
+    </script>
+
+</head>
+
+<body>
+    <form class="box" id="form_login" method="post">
+        <div class="imgcontainer">
+            <!--<img src="/images/logo.png" alt="Avatar" class="avatar">-->
+        </div>
+
+        <div class="container">
+            <label for="email"><b>Username</b></label>
+            <input type="text" placeholder="Enter Email" id="email" name="email" required>
+
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="password" name="passwordHash" required>
+
+            <br><br>
+
+            <button type="button" id="submit" onclick="Login(this.form);">Login</button>
+
+            <div class="added-buttons">
+                <button type="button" onclick="window.location.href='NewAccount.html';">Create Account</button>
+                <button type="button" onclick="window.location.href='ForgotPass.html';">Forgot Password</button>
+            </div>
+
+            <p th:if="${loginError != null}" th:text="${loginError}" style="color: red;"></p>
+        </div>
+    </form>
+</body>
+</html>

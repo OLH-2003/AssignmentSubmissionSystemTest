@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Forgot Password?</title>
+  <link rel="stylesheet" href="startup.css">
+      <style>
+        form {
+            margin: auto;
+            vertical-align: middle;
+            width: 30%;
+            height: auto;
+            background-size: 100% auto;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+            transition: 0.5s;
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+        }
+      </style>
+    <script>
+        function notAvailable(form) {
+          const forgotError = document.getElementById('forgotError');
+          forgotError.innerText = 'This feature isn't available yet!';
+          return false;
+        }
+
+        function sendResetLink(form) {
+            const email = form.email.value;
+
+            console.log("Sending password reset link to:", email);
+
+            fetch('http://localhost:8010/api/reset-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email }),
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("A password reset link has been sent to your email.");
+                } else {
+                    alert("Failed to send reset link. Please check your email.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while sending the reset link.');
+            });
+
+            return false;
+        }
+    </script>
+
+</head>
+
+<body>
+<form class="box" id="form_forgot_password" method="post">
+  <div class="container">
+    <h2>Forgot Password?</h2>
+    <p>Enter your email address, and we'll send you a link to reset your password.</p>
+
+    <!--<label for="email"><b>Email</b></label>-->
+    <input type="text" placeholder="Enter Email" id="email" name="email" required>
+
+    <button type="button" id="sendResetLink" onclick="notAvailable(this.form);">Send Reset Link</button>
+    <p class="error" id="forgotError"></p>
+
+    <div class="added-buttons">
+      <button type="button" onclick="window.location.href='Login.html';">Back to Login</button>
+      <button type="button" onclick="window.location.href='NewAccount.html';">Create Account</button>
+    </div>
+  </div>
+</form>
+</body>
+</html>
